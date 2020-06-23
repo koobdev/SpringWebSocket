@@ -12,13 +12,17 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @ComponentScan("com.Kcompany.Kboard.socket")
 
 public class WebSocketConfig implements WebSocketConfigurer{
+	
 	@Autowired
 	private WebSocketHandler websocketHandler;
 	
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 		// TODO Auto-generated method stub
-		registry.addHandler(websocketHandler, "/ws/chat");
+		registry.addHandler(websocketHandler, "/chat").setAllowedOrigins("*").withSockJS();
 	}
 
 }
+
+
+
