@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <%String cp = request.getContextPath(); %>
 <!-- 부트스트랩 cdn -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
@@ -24,7 +24,7 @@
 
 <!-- 상단 버튼 모음 -->
 <div class="container text-center">
-	<h2> 자유 게시판 </h2>
+	<h2> 채팅합시다! </h2>
 	<div class="text-right">
 		<form>
 			<%
@@ -53,26 +53,23 @@
 					</div>
 					<!-- 작성글 바디(채팅방 목록) -->
 					<div class="card-body" style="height:400px;">
-						<%-- <c:forEach items="" var=""></c:forEach> --%>
-						
-						<button onclick="connect()">SockJS connect</button><br/>
-						<button onclick="connectStomp()">Stomp connect</button><br/>
-						<button onclick="disconnectStomp()">Stomp Disconnect</button><br/>
-						<input id="msg" type="text"><button id="btnSend"> Send Message </button><br/>
-					</div>
-					
-					<div class="well"></div>
-					
-					<!-- 댓글 표시(메세지 입력, 전송창) -->
-					<div class="card-footer" >
-						<div class="row">
-							<div class="col-sm-10">
-								<input type="text" id="chatText" style="width:100%;">
-							</div>
-							<div class="col-sm-2">
-								<button class="btn btn-warning" id="chatBtn" style="float:right">전송</button>
-							</div>
-						</div>
+						<div class="text-right">
+							<button onclick="createRoom()" type="submit" class="btn btn-primary">채팅방 생성</button>
+						</div><br/>
+						<c:forEach items="${rooms}" var="rooms">
+							<ul class="list-group" onclick="selectRow(${rooms.id})">
+								<li class="list-group-item" style="cursor:pointer;">
+									<div class="row">
+										<div class="col-sm-9" style="border-right: 1px solid #333;">
+											${rooms.name}
+										</div>
+										<div class="col-sm-3">
+											${rooms.creater}
+										</div>
+									</div>
+								</li>
+							</ul>
+						</c:forEach>
 					</div>
 				</div>
 				
@@ -83,6 +80,7 @@
 						<h3 class="text-center">참여자</h3>
 					</div>
 					<div class="card-body" style="height:400px;">
+						
 					</div>
 				</div>
 				</div>
@@ -93,28 +91,8 @@
 </div>
 
 </body>
-<script>
+<script charset='euc-kr'>
 var socket = null;
-
-function connect(){
-	var ws = new SockJS("<%=cp%>/ws");
-
-	ws.onopen = function(){
-		console.log('Info : connection opend');
-	}	
-	
-	ws.onmessage = function(event){
-		console.log(event.data + '\n');
-	}
-	
-	ws.onclose = function(event){ 
-		console.log('Info : connection closed');
-		/* setTimeout(() => {
-			connect();
-		}, 1000); */
-	}
-	ws.onerror = function(err) { console.log('Error : ', err);}
-}
 
 function connectStomp(){
 	var ws = new SockJS("<%=cp%>/stomp");
@@ -148,10 +126,19 @@ $("#btnSend").click(function(){
 	console.log("Send Msg >> ", msg);
 });
 
+// 채팅방 row누르면 페이지 이동
+function selectRow(roodId){
+	window.location.href = "chat?id=" + roodId;
+}
 
-
-
-
+// 채팅방 생성
+function createRoom(){
+	var roomName = prompt("채팅방 이름을 입력하세요.");
+	var rn = String(roomName);
+	if(roomName != ''){
+		window.location.href = "createChat?name=" + rn;
+	}
+}
 
 
 
