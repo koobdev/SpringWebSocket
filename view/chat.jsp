@@ -53,12 +53,11 @@
 					</div>
 					<!-- 작성글 바디(채팅방 목록) -->
 					<div class="card-body" style="height:400px;">
-						<%-- <c:forEach items="" var=""></c:forEach> --%>
 						
-						<button onclick="connect()">SockJS connect</button><br/>
-						<button onclick="connectStomp()">Stomp connect</button><br/>
-						<button onclick="disconnectStomp()">Stomp Disconnect</button><br/>
-						<input id="msg" type="text"><button id="btnSend"> Send Message </button><br/>
+						<button onclick="connectStomp()">connect</button><br/>
+						<button onclick="disconnectStomp()">Disconnect</button><br/>
+						
+						<!-- 메세지 표시 부분 -->
 					</div>
 					
 					<div class="well"></div>
@@ -67,10 +66,10 @@
 					<div class="card-footer" >
 						<div class="row">
 							<div class="col-sm-10">
-								<input type="text" id="chatText" style="width:100%;">
+								<input type="text" id="msg" style="width:100%;">
 							</div>
 							<div class="col-sm-2">
-								<button class="btn btn-warning" id="chatBtn" style="float:right">전송</button>
+								<button class="btn btn-warning" id="btnSend" style="float:right">전송</button>
 							</div>
 						</div>
 					</div>
@@ -83,6 +82,11 @@
 						<h3 class="text-center">참여자</h3>
 					</div>
 					<div class="card-body" style="height:400px;">
+						<c:if test="${userList != null}">
+							<c:forEach items="${userList}" var="userList">	
+								<li> ${userList }
+							</c:forEach>
+						</c:if>
 					</div>
 				</div>
 				</div>
@@ -91,31 +95,11 @@
 		<div class="col-sm-1"></div>
 	</div>
 </div>
-
 </body>
 <script>
 var socket = null;
 
-function connect(){
-	var ws = new SockJS("<%=cp%>/ws");
-
-	ws.onopen = function(){
-		console.log('Info : connection opend');
-	}	
-	
-	ws.onmessage = function(event){
-		console.log(event.data + '\n');
-	}
-	
-	ws.onclose = function(event){ 
-		console.log('Info : connection closed');
-		/* setTimeout(() => {
-			connect();
-		}, 1000); */
-	}
-	ws.onerror = function(err) { console.log('Error : ', err);}
-}
-
+//stomp연결
 function connectStomp(){
 	var ws = new SockJS("<%=cp%>/stomp");
 	var client = Stomp.over(ws);
@@ -124,36 +108,38 @@ function connectStomp(){
 	socket.connect({}, onConnected, onError);
 }
 
-function onConnected(){
-	socket.send("/TTT", {}, "Connect Success!!!!!!!!!!");
-	socket.subscribe("/topic/message", function(event){
-		console.log("Receive Msg >> ", event);
+// 연결이 완료되었을 때
+function onConnected(frame){
+	console.log("Connect Success >>>> " + frame);
+	socket.subscribe("/sub/message/" + "${roomId}", function(response){
+		console.log(response.sender + " >>>>> ", response.message);
 	});
 }
 
+// 연결 시 에러발생 되었을 때
 function onError(error){
 	console.log("Error :::::::::: ", error);
 }
 
+// 연결이 끊겼을 때
 function disconnectStomp(){
 	socket.send("/disConn", {}, "DisConn Succ");
 	socket.disconnect();
 	console.log("BBBBBByeeeeeee~~~~");
 }
 
+// 전송버튼을 눌렀을 때
 $("#btnSend").click(function(){
 	var msg = $("input#msg").val();
-	socket.send("/TTT", {}, msg);
+	socket.send("/pub/TTT", {}, JSON.stringify({roomId: "${roomId}" , sender: "<%=sessionId%>", message: msg}));
 	
 	console.log("Send Msg >> ", msg);
 });
 
-
-
-
-
-
-
+// 채팅방 row누르면 페이지 이동
+function selectRow(roodId){
+	window.location.href = "chat?id=" + roodId;
+}
 
 
 </script>
