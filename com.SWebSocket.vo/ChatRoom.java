@@ -5,6 +5,7 @@ public class ChatRoom {
 	private String id;
 	private String name;
 	private String creater;
+	private String date;
 	
 	public final String getId() {
 		return id;
@@ -23,5 +24,11 @@ public class ChatRoom {
 	}
 	public final void setCreater(String creater) {
 		this.creater = creater;
+	}
+	public final String getDate() {
+		return date;
+	}
+	public final void setDate(String date) {
+		this.date = date;
 	}
 }

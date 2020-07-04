@@ -47,49 +47,29 @@
 		<div class="col-sm-1"></div>
 		<div class="col-sm-10">
 			<div class="card">
-				<div class="row">
-				<!-- 8:4으로 나누기 -->
-				<div class="col-sm-8" style="border-right: 1px solid #333;">
-					<!-- 작성글 헤더 -->
-					<div class="card-header" >
-						<h3 class="text-center">채팅방 목록</h3>
-					</div>
-					<!-- 작성글 바디(채팅방 목록) -->
-					<div class="card-body" style="height:400px;overflow:scroll;">
-						<div class="text-right">
-							<button onclick="createRoom()" type="submit" class="btn btn-primary">채팅방 생성</button>
-						</div><br/>
-						<c:forEach items="${rooms}" var="rooms">
-							<ul class="list-group" onclick="selectRow('${rooms.id}')">
-								<li class="list-group-item" style="cursor:pointer;">
-									<div class="row">
-										<div class="col-sm-9" style="border-right: 1px solid #333;">
-											${rooms.name}
-										</div>
-										<div class="col-sm-3">
-											${rooms.creater}
-										</div>
+				<!-- 작성글 헤더 -->
+				<div class="card-header" >
+					<h3 class="text-center">채팅방 목록</h3>
+				</div>
+				<!-- 작성글 바디(채팅방 목록) -->
+				<div class="card-body" style="height:500px;overflow:auto;">
+					<div class="text-right">
+						<button onclick="createRoom()" type="submit" class="btn btn-primary">채팅방 생성</button>
+					</div><br/>
+					<c:forEach items="${rooms}" var="rooms">
+						<ul class="list-group" onclick="selectRow('${rooms.id}')">
+							<li class="list-group-item" style="cursor:pointer;">
+								<div class="row">
+									<div class="col-sm-9" style="border-right: 1px solid #333;">
+										${rooms.name}
 									</div>
-								</li>
-							</ul>
-						</c:forEach>
-					</div>
-				</div>
-				
-				<div class="well"></div>
-				<div class="col-sm-4">
-					<!-- 참여자 부분 -->
-					<div class="card-header">
-						<h3 class="text-center">참여자</h3>
-					</div>
-					<div class="card-body" style="height:400px;">
-						<c:if test="${userList != null}">
-							<c:forEach items="userList" var="userList">
-								<c:out value="${userList}"></c:out>
-							</c:forEach>
-						</c:if>
-					</div>
-				</div>
+									<div class="col-sm-3">
+										${rooms.creater}
+									</div>
+								</div>
+							</li>
+						</ul>
+					</c:forEach>
 				</div>
 			</div>
 		</div>
@@ -161,6 +141,12 @@ function createRoom(){
 		creater.setAttribute("name", "creater");
 		creater.setAttribute("value", "<%=sessionId%>");
 		form.appendChild(creater);
+		
+		var date = document.createElement("input");
+		date.setAttribute("type", "hidden");
+		date.setAttribute("name", "date");
+		date.setAttribute("value", "d");
+		form.appendChild(date);
 		
 		document.charset = "utf-8";
 		document.body.appendChild(form);

@@ -13,10 +13,10 @@ import com.Kcompany.Kboard.vo.ChatRoom;
 @Mapper
 public interface CRoomMapper {
 
-	@Select("select * from chat")
+	@Select("select * from chat order by date desc")
 	List<ChatRoom> list();
 	
-	@Insert("insert into chat values(#{Room.id},#{Room.name},#{Room.creater})")
+	@Insert("insert into chat values(#{Room.id},#{Room.name},#{Room.creater},now())")
 	int createRoom(@Param("Room") ChatRoom chatRoom);
 	
 }

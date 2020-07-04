@@ -36,10 +36,8 @@ public class StompController {
 	
 	@MessageMapping("/TTT")
 	public void message(ChatMessage message) throws Exception {
-		
-		System.out.println("TTT >> " + message);
-		System.out.println("Message >> " + "roomid : " +  message.getRoomId() + 
-				",  sender : " + message.getSender() + ",  msg : " + message.getMessage());
+		System.out.println("Message >> " + "roomid : " +  message.getRoomId() + ",  sender : " + message.getSender() + 
+				",  msg : " + message.getMessage() + ", type : " + message.getType());
 		messagingTemplate.convertAndSend("/sub/message/" + message.getRoomId(), message);
 	}
 	
@@ -62,7 +60,7 @@ public class StompController {
 	
 	// 채팅방 생성
 	@RequestMapping("/createChat")
-	public String createChat(ChatRoom chatRoom, HttpServletRequest request) {
+	public String createChat(ChatRoom chatRoom, HttpServletRequest request, Model model) {
 		/*HttpSession session = request.getSession();
 		MemberVO memSession = (MemberVO) session.getAttribute("member");
 		String sessionId = memSession.getMemId();*/
@@ -82,6 +80,7 @@ public class StompController {
 				else break;
 			}
 		}
+		model.addAttribute("roomId", chatRoom.getId());
 		return "/chat/createOK";
 	}
 	

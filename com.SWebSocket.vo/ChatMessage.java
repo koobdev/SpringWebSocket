@@ -2,9 +2,11 @@ package com.Kcompany.Kboard.vo;
 
 public class ChatMessage {
 
+	
 	private String roomId;
 	private String sender;
 	private String message;
+	private MessageType type;
 	
 	public final String getRoomId() {
 		return roomId;
@@ -24,5 +26,11 @@ public class ChatMessage {
 	public final void setMessage(String message) {
 		this.message = message;
 	}
-
+	public final MessageType getType() {
+		return type;
+	}
+	public final void setType(MessageType type) {
+		this.type = type;
+	}
+	
 }

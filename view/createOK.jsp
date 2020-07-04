@@ -12,7 +12,7 @@
 <script type="text/javascript">
 	var cp = "<%=cp%>";
 	alert("채팅방이 생성되었습니다.");
-	window.location.href = cp + "/chatList"
+	window.location.href = cp + "/chat/" + "${roomId}";
 </script>
 </body>
 </html>
